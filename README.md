@@ -1,70 +1,25 @@
-# gitlines README
 
-This is the README for your extension "gitlines". After writing up a brief description, we recommend including the following sections.
+# Stage/unstage particular lines of code in VS Code Git diff editor.
+
+Use context menu on a line at the right or left panel of _(Working Tree)_ or _(Index)_ diff editor to stage/unstage the line. Select lines at any or both panels of the editors and use the context menu to stage/unstage all selected lines at once. 
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Command <code>'Stage line'</code> / <code>'Unstage line'</code> moves a single line to/from Git Index
 
-For example if there is an image subfolder under your extension project workspace:
+- Command <code>'Stage selected lines'</code> / <code>'Unstage selected lines'</code> moves all selected lines to/from Git Index
 
-\!\[feature X\]\(images/feature-x.png\)
+- Works with the right or left panel of a diff editor for a single line
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Works with selected changes on both panels of a diff editor for multiple lines
 
-## Requirements
+- Moves changes to Git Index using _(Working Tree)_ diff editor
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+- Removes changes from Git Index using _(Index)_ diff editor
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- The extension doesn't use [proposed API](https://code.visualstudio.com/api/advanced-topics/using-proposed-api) to obtain a diff editor current changes, but uses standard <code>Repository.diff()</code> method. The problem is <code>git</code> and VS Code diff editor end up with a _different sets of hunks_ for the same non trivial changes. The extension uses <code>git</code>'s hunks to run commands and diff editor uses its own to visualize, hense at times it's impossible to run stage/unstage command for a 'still changed' line in diff editor.
 
-## Release Notes
+- The extension uses undocumented (private) **vscode.git** extension API method <code>Repository.stage(resource: Uri, contents: string)</code> to stage arbitrary data into Index. Standard method <code>Repository.add()</code> can't process arbitrary data and <code>Repository.apply()</code> doesn't work with index.
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**

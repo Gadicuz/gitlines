@@ -1,45 +1,123 @@
 {
 	"name": "gitlines",
 	"displayName": "GitLines",
-	"description": "Stages/unstages an individual line of a hunk.",
-	"version": "0.0.1",
+	"description": "Stage/unstage particular lines of code to/from Git index",
+	"author": "Nikolay Postnikov <nick.postnikov@gmail.com>",
+	"version": "0.1.0",
+	"license": "MIT",
+	"keywords": [
+		"git",
+		"line",
+		"stage",
+		"SCM"
+	],
+	"icon": "git.png",
+	"homepage": "https://github.com/Gadicuz/gitlines#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Gadicuz/gitlines.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Gadicuz/gitlines/issues"
+	},
+	"categories": [
+		"SCM Providers", "Other"
+	],
+	"qna": false,
 	"engines": {
 		"vscode": "^1.64.0"
 	},
-	"categories": [
-		"Other"
+	"extensionDependencies": [
+		"vscode.git"
 	],
 	"activationEvents": [
-		"onCommand:gitlines.helloWorld"
+		"onCommand:gitlines.StageLine",
+		"onCommand:gitlines.StageLines",
+		"onCommand:gitlines.UnstageLine",
+		"onCommand:gitlines.UnstageLines"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "gitlines.helloWorld",
-				"title": "Hello World"
+				"command": "gitlines.StageLines",
+				"title": "Stage Selected Lines",
+				"category": "Git",
+				"enablement": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && resourceScheme == 'file'"
+			},
+			{
+				"command": "gitlines.StageLine",
+				"title": "Stage Line",
+				"category": "Git",
+				"enablement": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && resourceScheme == 'file'"
+			},
+			{
+				"command": "gitlines.UnstageLines",
+				"title": "Unstage Selected Lines",
+				"category": "Git",
+				"enablement": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && resourceScheme == 'git'"
+			},
+			{
+				"command": "gitlines.UnstageLine",
+				"title": "Unstage Line",
+				"category": "Git",
+				"enablement": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && resourceScheme == 'git'"
 			}
-		]
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "gitlines.StageLines",
+					"group": "2_git@4",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && editorHasSelection && resourceScheme == 'file'"
+				},
+				{
+					"command": "gitlines.UnstageLines",
+					"group": "2_git@5",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && editorHasSelection && resourceScheme == 'git'"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "gitlines.StageLines",
+					"group": "2_git@4",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && editorHasSelection && resourceScheme == 'file'"
+				},
+				{
+					"command": "gitlines.StageLine",
+					"group": "2_git@4",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && !editorHasSelection && resourceScheme == 'file'"
+				},
+				{
+					"command": "gitlines.UnstageLines",
+					"group": "2_git@5",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && editorHasSelection && resourceScheme == 'git'"
+				},
+				{
+					"command": "gitlines.UnstageLine",
+					"group": "2_git@5",
+					"when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0 && isInDiffEditor && !isInEmbeddedDiffEditor && !editorHasSelection && resourceScheme == 'git'"
+				}
+			]
+		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "npm run package",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"package-dev": "webpack --mode development",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"lint": "eslint src --ext ts"
 	},
 	"devDependencies": {
+		"@types/node": "17.x",
 		"@types/vscode": "^1.64.0",
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.0.0",
-		"@types/node": "14.x",
 		"@typescript-eslint/eslint-plugin": "^5.9.1",
 		"@typescript-eslint/parser": "^5.9.1",
 		"eslint": "^8.6.0",
-		"glob": "^7.2.0",
-		"mocha": "^9.1.3",
+		"ts-loader": "^9.2.6",
 		"typescript": "^4.5.4",
-		"@vscode/test-electron": "^2.0.3"
+		"webpack": "^5.69.0",
+		"webpack-cli": "^4.9.2"
 	}
 }
